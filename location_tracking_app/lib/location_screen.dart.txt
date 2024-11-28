@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
+import 'location_provider.dart';
+import 'location_data.dart';
+
+class LocationScreen extends StatefulWidget {
+  final String memberName;
+
+  LocationScreen({required this.memberName});
+
+  @override
+  _LocationScreenState createState() => _LocationScreenState();
+}
+
+class _LocationScreenState extends State<LocationScreen> {
+  late GoogleMapController mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<LocationProvider>(context, listen: false).fetchLocations(DateTime.now());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final locations = Provider.of<LocationProvider>(context).locations;
+
+    return Scaffold(
+      appBar: AppBar(title: Text("Location - ${widget.memberName}")),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 3,
+            child: GoogleMap(
+              onMapCreated: (controller) => mapController = controller,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(37.7749, -122.4194),
+                zoom: 12,
+              ),
+              markers: locations
+                  .map((loc) => Marker(
+                        markerId: MarkerId(loc.time.toString()),
+                        position: LatLng(loc.latitude, loc.longitude),
+                        infoWindow: InfoWindow(title: loc.description),
+                      ))
+                  .toSet(),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: ListView.builder(
+              itemCount: locations.length,
+              itemBuilder: (context, index) {
+                final location = locations[index];
+                return ListTile(
+                  title: Text(location.description),
+                  subtitle: Text("${location.time.hour}:${location.time.minute}"),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

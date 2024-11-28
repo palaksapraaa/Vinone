@@ -1,0 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+class RouteScreen extends StatelessWidget {
+  final LatLng startLocation;
+  final LatLng endLocation;
+
+  RouteScreen({required this.startLocation, required this.endLocation});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Route Details")),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: startLocation,
+          zoom: 12,
+        ),
+        markers: {
+          Marker(markerId: MarkerId("start"), position: startLocation),
+          Marker(markerId: MarkerId("end"), position: endLocation),
+        },
+        polylines: {
+          Polyline(
+            polylineId: PolylineId("route"),
+            points: [startLocation, endLocation],
+            color: Colors.blue,
+            width: 5,
+          ),
+        },
+      ),
+    );
+  }
+}

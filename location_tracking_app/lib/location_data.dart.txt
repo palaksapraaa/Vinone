@@ -1,0 +1,14 @@
+class LocationData {
+  final DateTime time; // Timestamp for when the location was visited
+  final double latitude; // Latitude of the location
+  final double longitude; // Longitude of the location
+  final String description; // Description of the location (e.g., "Visited Office")
+  
+  // Constructor to initialize the model
+  LocationData({
+    required this.time,
+    required this.latitude,
+    required this.longitude,
+    required this.description,
+  });
+}

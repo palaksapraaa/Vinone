@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+import 'location_data.dart'; // Import the LocationData model
+
+class LocationProvider with ChangeNotifier {
+  List<LocationData> _locations = []; // Private list of location data
+
+  // Getter to access the location data
+  List<LocationData> get locations => _locations;
+
+  // Method to fetch location data (simulated here, replace with actual API calls)
+  void fetchLocations(DateTime date) {
+    // Simulate fetching data for the given date
+    _locations = [
+      LocationData(
+        time: DateTime.now(),
+        latitude: 37.7749,
+        longitude: -122.4194,
+        description: "Office",
+      ),
+      LocationData(
+        time: DateTime.now().subtract(Duration(minutes: 30)),
+        latitude: 37.7849,
+        longitude: -122.4294,
+        description: "Coffee Break",
+      ),
+    ];
+    notifyListeners(); // Notify UI about the change
+  }
+}
